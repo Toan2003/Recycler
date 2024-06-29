@@ -321,6 +321,7 @@ public class ClientOrderFragment2 extends Fragment implements OnMapReadyCallback
                 totalMoney += plastic * typeAmountList.get(i).getAmount();
             }
         }
+        totalMoney = Math.round(totalMoney * 10.0) / 10.0;
         return new OrderPrice(totalMoney,isPaper,isPlastic,weightPapper,weightPlastic);
     }
 
@@ -338,7 +339,7 @@ public class ClientOrderFragment2 extends Fragment implements OnMapReadyCallback
                 totalMoney += plastic * typeAmountList.get(i).getAmount();
             }
         }
-        return totalMoney;
+        return Math.round(totalMoney * 10.0) / 10.0;
     }
 
 }
