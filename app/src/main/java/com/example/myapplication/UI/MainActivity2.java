@@ -39,6 +39,7 @@ public class MainActivity2 extends AppCompatActivity {
     private Messenger mMessenger;
     public boolean isServiceConnection = false;
     DriverServiceStatus driverServiceStatus;
+    OrderFragment orderFragment;
 
     private Driver driver;
     private ServiceConnection mServiceConnection = new ServiceConnection() {
@@ -131,7 +132,10 @@ public class MainActivity2 extends AppCompatActivity {
 
                 return true;
             } else if (itemId == R.id.historynavigation) {
-
+                ft = getSupportFragmentManager().beginTransaction();
+                orderFragment = OrderFragment.newInstance("history_fragment");
+                ft.replace(R.id.main, orderFragment);
+                ft.commit();
 
                 return true;
             } else if (itemId == R.id.profilenavigation) {
