@@ -97,8 +97,10 @@ public class Driver implements Parcelable {
         this.driverID = driverID;
         this.driverName = driverName;
         this.driverRating = driverRating;
-        this.lat = driverLocation.getLatitude();
-        this.lon = driverLocation.getLongitude();
+        if (driverLocation != null) {
+            this.lat = driverLocation.getLatitude();
+            this.lon = driverLocation.getLongitude();
+        }
     }
 
 }

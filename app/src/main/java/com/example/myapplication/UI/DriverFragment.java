@@ -90,7 +90,8 @@ public class DriverFragment extends Fragment implements OnMapReadyCallback {
          if (main.isServiceConnection) {
              ((Switch) driverlayout.findViewById(R.id.mySwitch)).setChecked(true);
          }
-         driver = new Driver("driverABC","Nguyen Van A","5.0/5.0",driverLocation);
+         driver = new Driver("driverABC","Nguyen Van A","5.0/5.0",null);
+         main.setDriver(driver);
          driverName = driverlayout.findViewById(R.id.driverName);
          driverRating = driverlayout.findViewById(R.id.driverRating);
          driverName.setText(driver.getDriverName());
@@ -101,7 +102,8 @@ public class DriverFragment extends Fragment implements OnMapReadyCallback {
             public void onClick(View v) {
                 if (!main.isServiceConnection) {
                     main.isServiceConnection = true;
-
+                    driver.setLon(driverLocation.getLongitude());
+                    driver.setLat(driverLocation.getLatitude());
                     main.startDriverService(driver);
                 } else {
                     main.stopDriverService();
