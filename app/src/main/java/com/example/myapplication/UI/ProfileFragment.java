@@ -1,22 +1,14 @@
 package com.example.myapplication.UI;
 
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 
-import androidx.activity.EdgeToEdge;
-import androidx.core.content.ContextCompat;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 import androidx.fragment.app.Fragment;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.ListView;
 
-import com.example.myapplication.Adapter.MessageAdapter;
 import com.example.myapplication.R;
 
 public class ProfileFragment extends Fragment {
