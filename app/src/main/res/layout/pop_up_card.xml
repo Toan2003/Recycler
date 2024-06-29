@@ -53,6 +53,10 @@
             android:fontFamily="@font/poppins"
             android:paddingVertical="16dp"
             android:paddingStart="16dp"
-            android:textSize="16dp" />
+            android:textSize="16dp"
+            android:textColorHint="@color/black"
+            android:inputType="numberDecimal"
+            android:ems="10"/>
+
     </LinearLayout>
 </androidx.cardview.widget.CardView>

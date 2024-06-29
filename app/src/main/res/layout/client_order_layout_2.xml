@@ -71,13 +71,14 @@
                         android:contentDescription="Collector's avatar"/>
 
                     <TextView
+                        android:id="@+id/customerName"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="Driver's name"
-                        android:textStyle="bold"
-                        android:textSize="20sp"
+                        android:layout_weight="1"
                         android:gravity="start"
-                        android:layout_weight="1"/>
+                        android:text="Driver's name"
+                        android:textSize="20sp"
+                        android:textStyle="bold" />
 
                     <ImageButton
                         android:layout_width="30dp"
@@ -119,11 +120,12 @@
                             tools:ignore="HardcodedText" />
 
                         <TextView
+                            android:id="@+id/pickupTimeCO2"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:textSize="18sp"
                             android:gravity="end|center"
-                            android:text="Right now"/>
+                            android:text="Right now"
+                            android:textSize="18sp" />
 
                     </LinearLayout>
 
@@ -142,11 +144,12 @@
                             tools:ignore="HardcodedText" />
 
                         <TextView
+                            android:id="@+id/amountView"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:textSize="18sp"
                             android:gravity="end|center"
-                            android:text="> 10 kg"/>
+                            android:text="> 10 kg"
+                            android:textSize="18sp" />
 
                     </LinearLayout>
 
@@ -165,12 +168,13 @@
                             tools:ignore="HardcodedText" />
 
                         <TextView
+                            android:id="@+id/addressView"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:textSize="15sp"
                             android:gravity="end|center"
                             android:text="ABC, Street 11, Linh Trung ward,
-Thu Duc city"/>
+Thu Duc city"
+                            android:textSize="15sp" />
 
                     </LinearLayout>
 
