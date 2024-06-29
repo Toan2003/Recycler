@@ -13,6 +13,7 @@ import android.widget.Button;
 import android.widget.ListView;
 
 import com.example.myapplication.Adapter.MessageAdapter;
+import com.example.myapplication.Adapter.NotificationAdapter;
 import com.example.myapplication.R;
 
 public class NotificationFragment extends Fragment {
@@ -56,8 +57,9 @@ public class NotificationFragment extends Fragment {
         ListView List = (ListView) view.findViewById(R.id.message_list);
 
         String[] Data = {"Adam", "Eve", "Christ", "Adam", "Eve", "Christ"};
-        MessageAdapter adapter = new MessageAdapter(getContext(), Data);
-        List.setAdapter(adapter);
+        MessageAdapter messageAdapter = new MessageAdapter(getContext(), Data);
+        NotificationAdapter notificationAdapter = new NotificationAdapter(getContext(), Data);
+        List.setAdapter(messageAdapter);
 
         messageBtn = (Button) view.findViewById(R.id.messageBtn);
         notificationBtn = (Button) view.findViewById(R.id.notificationBtn);
@@ -65,12 +67,12 @@ public class NotificationFragment extends Fragment {
         Drawable active = ContextCompat.getDrawable(getContext(), R.drawable.message_button_active);
         Drawable inactive = ContextCompat.getDrawable(getContext(), R.drawable.message_button);
 
-
         messageBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 messageBtn.setBackground(active);
                 notificationBtn.setBackground(inactive);
+                List.setAdapter(messageAdapter);
             }
         });
 
@@ -79,6 +81,7 @@ public class NotificationFragment extends Fragment {
             public void onClick(View v) {
                 notificationBtn.setBackground(active);
                 messageBtn.setBackground(inactive);
+                List.setAdapter(notificationAdapter);
             }
         });
 
