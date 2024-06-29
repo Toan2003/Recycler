@@ -24,7 +24,7 @@
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/notification_arc" />
+        app:srcCompat="@drawable/history_arc" />
 
     <LinearLayout
         android:id="@+id/linearLayout3"
@@ -56,6 +56,7 @@
         android:layout_width="320dp"
         android:layout_height="36dp"
         android:layout_marginStart="31dp"
+        android:layout_marginTop="20dp"
         android:layout_marginEnd="31dp"
         android:background="@drawable/total_earned"
         android:gravity="center|center_horizontal|center_vertical"
@@ -65,7 +66,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.482"
         app:layout_constraintStart_toStartOf="parent"
-        tools:layout_editor_absoluteY="94dp">
+        app:layout_constraintTop_toBottomOf="@+id/linearLayout3">
 
         <TextView
             android:id="@+id/textView3"
@@ -83,11 +84,10 @@
         android:id="@+id/tabLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="12dp"
         android:background="#00FFFFFF"
-        app:layout_constraintBottom_toTopOf="@+id/RecyclerView"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/linearLayout2"
         app:tabGravity="center"
         app:tabIndicatorColor="#000000"
         app:tabIndicatorFullWidth="true"
@@ -112,15 +112,17 @@
 
     </com.google.android.material.tabs.TabLayout>
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/RecyclerView"
-        android:layout_width="378dp"
-        android:layout_height="539dp"
-        android:layout_marginStart="22dp"
-        android:layout_marginTop="20dp"
-        android:layout_marginEnd="22dp"
+    <ListView
+        android:id="@+id/listView"
+        android:layout_width="0dp"
+        android:layout_height="500dp"
+        android:dividerHeight="10dp"
+        android:maxWidth="20dp"
+        android:paddingStart="40dp"
+        android:paddingEnd="40dp"
+        app:flow_verticalGap="10dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imageView5" />
+        app:layout_constraintTop_toBottomOf="@+id/tabLayout" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
