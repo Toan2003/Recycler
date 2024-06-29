@@ -6,6 +6,7 @@ import android.Manifest;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
+import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Bundle;
@@ -76,7 +77,7 @@ public class ClientOrderFragment2 extends Fragment implements OnMapReadyCallback
     List<TypeAmount> list;
     LatLng customerLocation;
     private static final String BASE_URL = "https://maps.googleapis.com/maps/api/";
-    private static final String API_KEY = "AIzaSyBXKJAnQezm6w9XBS54fZQLrDdSM1_PKII";
+    private String API_KEY;
     public static ClientOrderFragment2 newInstance(String strArg1) {
         ClientOrderFragment2 fragment = new ClientOrderFragment2();
         Bundle bundle = new Bundle();
@@ -91,6 +92,15 @@ public class ClientOrderFragment2 extends Fragment implements OnMapReadyCallback
         main = (MainActivity2) getActivity();
         context = getActivity();
         this.context = context;
+
+        ApplicationInfo ai = null;
+        try {
+            ai = context.getPackageManager().getApplicationInfo(context.getPackageName(), PackageManager.GET_META_DATA);
+        } catch (PackageManager.NameNotFoundException e) {
+            throw new RuntimeException(e);
+        }
+        Bundle bundle = ai.metaData;
+        API_KEY = bundle.getString("com.google.android.geo.API_KEY");
 
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireActivity());
     }
