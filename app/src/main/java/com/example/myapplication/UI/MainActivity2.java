@@ -40,6 +40,7 @@ public class MainActivity2 extends AppCompatActivity {
     public boolean isServiceConnection = false;
     DriverServiceStatus driverServiceStatus;
 
+    private Driver driver;
     private ServiceConnection mServiceConnection = new ServiceConnection() {
         @Override
         public void onServiceConnected(ComponentName name, IBinder service) {
@@ -201,5 +202,12 @@ public class MainActivity2 extends AppCompatActivity {
                 e.printStackTrace();
             }
         }
+    }
+    public Driver getDriver() {
+        return driver;
+    }
+
+    public void setDriver(Driver driver) {
+        this.driver = driver;
     }
 }

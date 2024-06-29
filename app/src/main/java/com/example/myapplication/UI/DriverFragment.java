@@ -21,6 +21,7 @@ import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.Switch;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -52,6 +53,9 @@ public class DriverFragment extends Fragment implements OnMapReadyCallback {
     MainActivity2 main;
     Context context;
     Button startServiceBtn;
+    TextView driverName;
+    TextView driverRating;
+
     boolean isServiceRunning = false;
     Driver driver;
     ImageButton mapbtn;
@@ -86,14 +90,18 @@ public class DriverFragment extends Fragment implements OnMapReadyCallback {
          if (main.isServiceConnection) {
              ((Switch) driverlayout.findViewById(R.id.mySwitch)).setChecked(true);
          }
-
+         driver = new Driver("driverABC","Nguyen Van A","5.0/5.0",driverLocation);
+         driverName = driverlayout.findViewById(R.id.driverName);
+         driverRating = driverlayout.findViewById(R.id.driverRating);
+         driverName.setText(driver.getDriverName());
+         driverRating.setText(driver.getDriverRating());
          startServiceBtn = (Button) driverlayout.findViewById(R.id.mySwitch);
          startServiceBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (!main.isServiceConnection) {
                     main.isServiceConnection = true;
-                    driver = new Driver("driverABC","ABC","5/5",driverLocation);
+
                     main.startDriverService(driver);
                 } else {
                     main.stopDriverService();
@@ -171,6 +179,10 @@ public class DriverFragment extends Fragment implements OnMapReadyCallback {
                         }
                     }
                 });
+    }
+
+    public void setUsername(String username) {
+
     }
 
 

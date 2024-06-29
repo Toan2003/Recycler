@@ -62,14 +62,20 @@ public class LoginActivity extends AppCompatActivity {
                 if (isDriver) {
                     String username = loginFragment.getUsername();
                     String password = loginFragment.getPassword();
-                    Toast.makeText(context, "Username: " + username + " Password: " + password, Toast.LENGTH_SHORT).show();
+//                    if (username == "toan" && password == "123456") {
+//                        startActivity(new Intent(context, MainActivity2.class));
+//                    }
+//                    Toast.makeText(context, "Username: " + username + " Password: " + password, Toast.LENGTH_SHORT).show();
                     startActivity(new Intent(context, MainActivity2.class));
                 } else {
                     if (currentPage == 2) {
                         // handle login
                         String username = loginFragment.getUsername();
                         String password = loginFragment.getPassword();
-                        Toast.makeText(context, "Username: " + username + " Password: " + password, Toast.LENGTH_SHORT).show();
+//                        if (username == "toan" && password == "123456") {
+//                            startActivity(new Intent(context, MainActivity.class));
+//                        }
+//                        Toast.makeText(context, "Username: " + username + " Password: " + password, Toast.LENGTH_SHORT).show();
                         startActivity(new Intent(context, MainActivity.class));
                     } else if (currentPage == 1) {
                         loginFragment = LoginFragment.newInstance("user");
