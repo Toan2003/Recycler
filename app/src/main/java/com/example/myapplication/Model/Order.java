@@ -13,6 +13,7 @@ import androidx.annotation.Nullable;
 import java.sql.Time;
 import java.util.Date;
 
+import com.google.android.gms.maps.model.LatLng;
 import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.GeoPoint;
 
@@ -126,5 +127,9 @@ public class Order implements Parcelable {
         dest.writeDouble(lon);
         dest.writeLong(pickupTime);
         dest.writeString(Amount);
+    }
+
+    public LatLng getCustomerLocation() {
+        return new LatLng(lat, lon);
     }
 }
