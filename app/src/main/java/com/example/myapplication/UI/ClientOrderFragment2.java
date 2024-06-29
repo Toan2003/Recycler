@@ -22,6 +22,7 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -34,6 +35,7 @@ import android.widget.Toast;
 
 import com.example.myapplication.Adapter.TypeAmountAdapter;
 import com.example.myapplication.Model.Customer;
+import com.example.myapplication.Model.Driver;
 import com.example.myapplication.Model.Order;
 import com.example.myapplication.Model.OrderPrice;
 import com.example.myapplication.Model.TypeAmount;
@@ -49,6 +51,7 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
@@ -198,47 +201,54 @@ public class ClientOrderFragment2 extends Fragment implements OnMapReadyCallback
         if (ContextCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION)
                 == PackageManager.PERMISSION_GRANTED) {
             enableMyLocation();
-
-            LatLng dirverLocation = getUserLocation();
-            mMap.addMarker(new MarkerOptions().position(dirverLocation));
-            mMap.addMarker(new MarkerOptions().position(customerLocation));
-            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(dirverLocation, 10));
-
-            Retrofit retrofit = new Retrofit.Builder()
-                    .baseUrl(BASE_URL)
-                    .addConverterFactory(GsonConverterFactory.create())
-                    .build();
-
-            DirectionsApiService service = retrofit.create(DirectionsApiService.class);
-            Call<DirectionsResponse> call = service.getDirections(
-                    dirverLocation.latitude + "," + dirverLocation.longitude,
-                    customerLocation.latitude + "," + customerLocation.longitude,
-                    API_KEY
-            );
-
-            call.enqueue(new Callback<DirectionsResponse>() {
-                @Override
-                public void onResponse(Call<DirectionsResponse> call, Response<DirectionsResponse> response) {
-                    if (response.isSuccessful()) {
-                        DirectionsResponse directionsResponse = response.body();
-                        if (directionsResponse != null && !directionsResponse.routes.isEmpty()) {
-                            String encodedPoints = directionsResponse.routes.get(0).overviewPolyline.points;
-                            List<LatLng> decodedPath = PolyUtil.decode(encodedPoints);
-                            mMap.addPolyline(new PolylineOptions().addAll(decodedPath));
-                        } else {
-                            Toast.makeText(getActivity(), "Không có tuyến đường nào được tìm thấy", Toast.LENGTH_SHORT).show();
-                        }
-                    } else {
-                        Toast.makeText(getActivity(), "Lỗi phản hồi từ API", Toast.LENGTH_SHORT).show();
-                    }
-                }
-
-                @Override
-                public void onFailure(Call<DirectionsResponse> call, Throwable t) {
-                    Toast.makeText(getActivity(), "Lỗi khi gọi API: " + t.getMessage(), Toast.LENGTH_SHORT).show();
-                }
-            });
         }
+        Driver driver = main.getDriver();
+        LatLng driverLocation = new LatLng (driver.getLat(),driver.getLon());
+
+        mMap.addMarker(new MarkerOptions()
+                .position(customerLocation)
+                .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED)));
+
+        mMap.addMarker(new MarkerOptions()
+                .position(driverLocation)
+                .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN)));
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(driverLocation, 10));
+
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(BASE_URL)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+
+        DirectionsApiService service = retrofit.create(DirectionsApiService.class);
+        Call<DirectionsResponse> call = service.getDirections(
+                driverLocation.latitude + "," + driverLocation.longitude,
+                customerLocation.latitude + "," + customerLocation.longitude,
+                API_KEY
+        );
+
+        call.enqueue(new Callback<DirectionsResponse>() {
+            @Override
+            public void onResponse(Call<DirectionsResponse> call, Response<DirectionsResponse> response) {
+                if (response.isSuccessful()) {
+                    DirectionsResponse directionsResponse = response.body();
+                    if (directionsResponse != null && !directionsResponse.routes.isEmpty()) {
+                        String encodedPoints = directionsResponse.routes.get(0).overviewPolyline.points;
+                        List<LatLng> decodedPath = PolyUtil.decode(encodedPoints);
+//                        mMap.addPolyline(new PolylineOptions().addAll(decodedPath));
+                        mMap.addPolyline(new PolylineOptions().addAll(decodedPath).color(0xFF0000FF));
+                    } else {
+                        Toast.makeText(getActivity(), "Không có tuyến đường nào được tìm thấy", Toast.LENGTH_SHORT).show();
+                    }
+                } else {
+                    Toast.makeText(getActivity(), "Lỗi phản hồi từ API", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<DirectionsResponse> call, Throwable t) {
+                Toast.makeText(getActivity(), "Lỗi khi gọi API: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     private void enableMyLocation() {
