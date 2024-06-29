@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "790168455442",
+    "project_id": "prehackathon-c21ad",
+    "storage_bucket": "prehackathon-c21ad.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:790168455442:android:1f6582f1af5b6400f24bcb",
+        "android_client_info": {
+          "package_name": "Hackathon.app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCYUMCUu66ja6vDp2HCMmhaj0MEgY_C9Qg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
