@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- Vòng tròn nền -->
+    <item
+       >
+        <shape android:shape="oval"
+            >
+            <size android:height="30dp"
+                android:width="30dp"/>
+            <solid android:color="#92E3A9" /> <!-- Màu nền vòng tròn, có thể thay đổi -->
+            <stroke
+                android:width="0.2dp"
+            android:color="#92E3A9" /> <!-- Màu của đường viền vòng tròn -->
+        </shape>
+    </item>
+
+    <!-- Bitmap -->
+    <item android:gravity="center"
+        >
+        <bitmap
+            android:src="@drawable/iconrecycle"
+            android:tint="@null"
+            android:gravity="center"
+            />
+    </item>
+</layer-list>

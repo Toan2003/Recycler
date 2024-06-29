@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/recyclenavigation"
+        android:icon="@drawable/iconrecycle"
+        android:title="Recycle"
+        />
+    <item
+        android:id="@+id/mesagenavigation"
+        android:icon="@drawable/iconmessage"
+        android:title="Message"
+        />
+
+    <item
+        android:id="@+id/historynavigation"
+        android:icon="@drawable/iconhistory"
+        android:title="History"
+        />
+    <item
+        android:id="@+id/profilenavigation"
+        android:icon="@drawable/icongroup"
+        android:title="Profile"
+
+        />
+
+
+
+</menu>
+

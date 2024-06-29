@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/layout_popup"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="16dp"
+    android:background="@drawable/bg_white_corner_16"
+    android:orientation="vertical">
+
+
+    <TextView
+        android:id="@+id/textView20"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="16dp"
+        android:layout_weight="1"
+        android:fontFamily="@font/poppins_semibold"
+        android:gravity="center"
+        android:text="Complete Order"
+        android:textColor="@color/black"
+        android:textSize="22dp" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recycleViewPopup"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="3dp"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager">
+
+<!--        <LinearLayout-->
+<!--            android:id="@+id/linear"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="match_parent"-->
+<!--            android:orientation="vertical" />-->
+    </androidx.recyclerview.widget.RecyclerView>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="16dp"
+        android:layout_marginVertical="16dp"
+        android:orientation="vertical">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Total: 200"
+                android:textSize="20dp"
+                android:padding="10dp"
+                android:textAlignment="textEnd"
+                />
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/dialogBtn"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_weight="1"
+            android:background="@drawable/bg_green_corner_16"
+            android:text="ACCEPT"
+            app:backgroundTint="@null" />
+    </LinearLayout>
+</LinearLayout>

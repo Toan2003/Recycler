@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            >
+
+            <fragment
+                android:id="@+id/map"
+                android:name="com.google.android.gms.maps.SupportMapFragment"
+                android:layout_width="match_parent"
+                android:layout_height="540dp"
+                />
+
+        </FrameLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="60dp"
+            android:layout_marginRight="10dp">
+
+            <ImageButton
+                android:id="@+id/mapbtn"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:background="@drawable/station_button"
+                android:src="@drawable/station" />
+        </RelativeLayout>
+
+        <FrameLayout
+            android:id="@+id/frame_container"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="450dp">
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:src="@drawable/rectangle_recyling"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:layout_marginTop="20dp"
+                android:paddingLeft="30dp"
+                android:paddingRight="30dp">
+
+                <ImageView
+                    android:id="@+id/circle_avatar"
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:background="@drawable/rounded_circle"
+                    android:gravity="center"
+                    android:text="1"
+                    android:layout_gravity="center|top"
+                    />
+
+                <TextView
+                    android:paddingTop="10dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:text="Driver Name"
+                    android:layout_gravity="center|top"
+                    android:textColor="@color/black"
+                    style="@style/SmallBoldFont"
+                    android:textSize="20dp"/>
+
+                <LinearLayout
+                    android:paddingTop="10dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_gravity="center">
+
+                    <ImageView
+
+                        android:layout_width="15dp"
+                        android:layout_height="15dp"
+                        android:background="@drawable/rounded_circle"
+                        android:gravity="center"
+                        android:text="1"
+                        android:layout_gravity="center"
+                        />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:text=" 5.0/5.0"
+                        android:layout_gravity="center|top"
+                        android:textColor="@color/black"/>
+
+                </LinearLayout>
+
+                <TableLayout
+                    android:layout_height="wrap_content"
+                    android:layout_width="match_parent">
+                    <TableRow
+                        android:paddingTop="10dp">
+                        <TextView android:layout_height="wrap_content"
+                            android:layout_width="wrap_content"
+                            android:text="Total balance: "
+                            android:layout_weight="1"/>
+                        <TextView android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="157.000 VND"
+                            android:layout_weight="1"
+                            android:gravity="end"
+                            android:layout_marginRight="12dp"
+                            style="@style/SmallBoldFont"/>
+                    </TableRow>
+                    <TableRow
+                        android:paddingTop="10dp">
+                        <TextView android:layout_height="wrap_content"
+                            android:layout_width="wrap_content"
+                            android:text="Total income: "
+                            android:layout_weight="1"/>
+                        <TextView android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="157.000 VND"
+                            android:layout_weight="1"
+                            android:gravity="end"
+                            android:layout_marginRight="12dp"
+                            style="@style/SmallBoldFont"/>
+                    </TableRow>
+                    <TableRow
+                        android:paddingTop="10dp">
+                        <TextView android:layout_height="wrap_content"
+                            android:layout_width="wrap_content"
+                            android:text="Accept order: "
+                            android:layout_weight="1"/>
+                        <Switch android:id="@+id/mySwitch"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:gravity="end"
+                            android:layout_weight="1"
+                            android:checked="false"
+                            android:trackTint="#4B825E"
+                            android:thumbTint="#FFFFFF"
+                            />
+                    </TableRow>
+
+                </TableLayout>
+
+            </LinearLayout>
+        </FrameLayout>
+
+    </FrameLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

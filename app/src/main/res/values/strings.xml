@@ -1,3 +1,14 @@
 <resources>
-    <string name="app_name">My Application</string>
+    <string name="app_name">PreHackathon</string>
+    <string name="Login_Headline_0">Welcome to GreenUs</string>
+    <string name="Login_Headline_1">Change your recycle habit</string>
+    <string name="Login_Headline_2">Let log in your account</string>
+    <string name="Login_Text_0">This is your first step to go green</string>
+    <string name="Login_Text_1">Some of your small habit can bring a huge impact to our city and our planet</string>
+    <string name="Login_Text_2">Log in account to start your recycle habit today</string>
+    <string name="login_Button">Start</string>
+    <string name="Login_Text_Driver">Earn money and spread green with us</string>
+
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="title_activity_maps">MapsActivity</string>
 </resources>
