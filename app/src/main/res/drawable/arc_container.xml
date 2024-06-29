@@ -10,11 +10,11 @@
 
     </item>
     <item
-        android:bottom="-100dp"
-        android:left="-100dp"
+        android:bottom="-80dp"
+        android:left="-50dp"
 
-        android:right="-100dp"
-        android:top="120dp">
+        android:right="-50dp"
+        android:top="100dp">
         <shape xmlns:android="http://schemas.android.com/apk/res/android"
             android:shape="oval">
             <solid android:color="#F5FFF5" />
