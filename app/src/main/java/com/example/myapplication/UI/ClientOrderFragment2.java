@@ -22,6 +22,7 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -30,14 +31,18 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.myapplication.Adapter.TypeAmountAdapter;
 import com.example.myapplication.Model.Customer;
+import com.example.myapplication.Model.Driver;
 import com.example.myapplication.Model.Order;
 import com.example.myapplication.Model.OrderPrice;
 import com.example.myapplication.Model.TypeAmount;
 import com.example.myapplication.R;
 import com.example.myapplication.Service.CustomerServiceStatus;
+import com.example.myapplication.Service.DirectionsApiService;
+import com.example.myapplication.Service.DirectionsResponse;
 import com.example.myapplication.Service.DriverServiceStatus;
 import com.example.myapplication.Service.TotalLiveData;
 import com.google.android.gms.location.FusedLocationProviderClient;
@@ -46,12 +51,22 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.maps.android.PolyUtil;
 
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 public class ClientOrderFragment2 extends Fragment implements OnMapReadyCallback {
     MainActivity2 main;
@@ -59,6 +74,9 @@ public class ClientOrderFragment2 extends Fragment implements OnMapReadyCallback
     private GoogleMap mMap;
     private FusedLocationProviderClient fusedLocationClient;
     List<TypeAmount> list;
+    LatLng customerLocation;
+    private static final String BASE_URL = "https://maps.googleapis.com/maps/api/";
+    private static final String API_KEY = "AIzaSyBXKJAnQezm6w9XBS54fZQLrDdSM1_PKII";
     public static ClientOrderFragment2 newInstance(String strArg1) {
         ClientOrderFragment2 fragment = new ClientOrderFragment2();
         Bundle bundle = new Bundle();
@@ -83,6 +101,7 @@ public class ClientOrderFragment2 extends Fragment implements OnMapReadyCallback
         ConstraintLayout recyclelayout = (ConstraintLayout) inflater.inflate(R.layout.client_order_layout_2, null);
         Customer customer = DriverServiceStatus.getInstance().getCustomer();
         Order order = DriverServiceStatus.getInstance().getOrder();
+        customerLocation = order.getCustomerLocation();
         ((TextView) recyclelayout.findViewById(R.id.customerName)).setText(customer.getCustomerName());
         Date date = new Date(order.getPickupTime());
         ((TextView) recyclelayout.findViewById(R.id.pickupTimeCO2)).setText(String.valueOf(date));
@@ -183,6 +202,53 @@ public class ClientOrderFragment2 extends Fragment implements OnMapReadyCallback
                 == PackageManager.PERMISSION_GRANTED) {
             enableMyLocation();
         }
+        Driver driver = main.getDriver();
+        LatLng driverLocation = new LatLng (driver.getLat(),driver.getLon());
+
+        mMap.addMarker(new MarkerOptions()
+                .position(customerLocation)
+                .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED)));
+
+        mMap.addMarker(new MarkerOptions()
+                .position(driverLocation)
+                .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN)));
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(driverLocation, 10));
+
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(BASE_URL)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+
+        DirectionsApiService service = retrofit.create(DirectionsApiService.class);
+        Call<DirectionsResponse> call = service.getDirections(
+                driverLocation.latitude + "," + driverLocation.longitude,
+                customerLocation.latitude + "," + customerLocation.longitude,
+                API_KEY
+        );
+
+        call.enqueue(new Callback<DirectionsResponse>() {
+            @Override
+            public void onResponse(Call<DirectionsResponse> call, Response<DirectionsResponse> response) {
+                if (response.isSuccessful()) {
+                    DirectionsResponse directionsResponse = response.body();
+                    if (directionsResponse != null && !directionsResponse.routes.isEmpty()) {
+                        String encodedPoints = directionsResponse.routes.get(0).overviewPolyline.points;
+                        List<LatLng> decodedPath = PolyUtil.decode(encodedPoints);
+//                        mMap.addPolyline(new PolylineOptions().addAll(decodedPath));
+                        mMap.addPolyline(new PolylineOptions().addAll(decodedPath).color(0xFF0000FF));
+                    } else {
+                        Toast.makeText(getActivity(), "Không có tuyến đường nào được tìm thấy", Toast.LENGTH_SHORT).show();
+                    }
+                } else {
+                    Toast.makeText(getActivity(), "Lỗi phản hồi từ API", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<DirectionsResponse> call, Throwable t) {
+                Toast.makeText(getActivity(), "Lỗi khi gọi API: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     private void enableMyLocation() {
@@ -199,10 +265,11 @@ public class ClientOrderFragment2 extends Fragment implements OnMapReadyCallback
         }
     }
 
-    private void getUserLocation() {
+    private LatLng getUserLocation() {
         if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            return;
+            return null;
         }
+        final LatLng[] currentLocation = {null};
         fusedLocationClient.getLastLocation()
                 .addOnSuccessListener(requireActivity(), new OnSuccessListener<Location>() {
                     @Override
@@ -211,10 +278,12 @@ public class ClientOrderFragment2 extends Fragment implements OnMapReadyCallback
                         if (location != null) {
                             // Logic to handle location object
                             LatLng userLocation = new LatLng(location.getLatitude(), location.getLongitude());
+                            currentLocation[0] = userLocation;
                             mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(userLocation, 15));
                         }
                     }
                 });
+        return currentLocation[0];
     }
     private List<TypeAmount> getTypeAmountList(){
         List<TypeAmount> typeAmountList = new ArrayList<>();

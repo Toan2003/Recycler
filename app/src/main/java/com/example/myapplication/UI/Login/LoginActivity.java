@@ -40,7 +40,7 @@ public class LoginActivity extends AppCompatActivity {
         setContentView(R.layout.activity_login);
         btnlogin = findViewById(R.id.btnLogin);
 //        Enable len khi la driver
-//        isDriver = true;
+        isDriver = true;
         if (isDriver) {
             ((ConstraintLayout) findViewById(R.id.loginFragmentContainer)).removeAllViews();
             loginFragment = LoginFragment.newInstance("driver");
