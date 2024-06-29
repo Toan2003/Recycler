@@ -1,5 +1,7 @@
 package com.example.myapplication.UI;
 
+import static com.example.myapplication.Ultils.Ultils.getAddressFromLocation;
+
 import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
@@ -67,7 +69,10 @@ public class RecycleLayout3Fragment extends Fragment implements OnMapReadyCallba
         ConstraintLayout recyclelayout = (ConstraintLayout) inflater.inflate(R.layout.recycle_layout_3, null);
         ((TextView) recyclelayout.findViewById(R.id.customerName)).setText(driver.getDriverName());
         ((TextView) recyclelayout.findViewById(R.id.driverRating)).setText(driver.getDriverRating());
-
+        Location location = new Location("");
+        location.setLatitude(driver.getLat());
+        location.setLongitude(driver.getLon());
+        ((TextView) recyclelayout.findViewById(R.id.addressRC3)).setText(getAddressFromLocation(location,getContext()));
         SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager()
                 .findFragmentById(R.id.map);
         if (mapFragment == null) {

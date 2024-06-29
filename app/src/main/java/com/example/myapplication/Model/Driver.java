@@ -91,7 +91,6 @@ public class Driver implements Parcelable {
     }
 
     public Driver() {
-
     }
     public Driver(String driverID, String driverName, String driverRating, Location driverLocation) {
         this.driverID = driverID;

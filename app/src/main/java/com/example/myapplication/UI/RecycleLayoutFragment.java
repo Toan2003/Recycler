@@ -1,5 +1,7 @@
 package com.example.myapplication.UI;
 
+import static com.example.myapplication.Ultils.Ultils.getAddressFromLocation;
+
 import android.app.TimePickerDialog;
 import android.Manifest;
 import android.app.Activity;
@@ -94,10 +96,15 @@ public class RecycleLayoutFragment extends Fragment implements OnMapReadyCallbac
         btnrecycle.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Amount = ">12kg";
-                pickupTime = Timestamp.now();
-                Customer customer = new Customer("ClientABC", "ABC 123 street","toanphamphu2003@gmail.com","0829365927");
+                if (Amount == null) {
+                    Amount = " >3kg";
+                }
+                if (pickupTime == null) {
+                    pickupTime = Timestamp.now();
+                }
+                Customer customer = new Customer("ClientABC", null,"toanphamphu2003@gmail.com","0829365927");
                 Order order = new Order("Order1903#2", "ClientABC",null, currentLocation,  pickupTime, Amount);
+                main.setCustomer(customer);
                 CustomerServiceStatus.getInstance().setOrder(order);
                 main.startCustomerService(order,customer);
                 FragmentTransaction ft = getFragmentManager().beginTransaction();
@@ -173,6 +180,7 @@ public class RecycleLayoutFragment extends Fragment implements OnMapReadyCallbac
             public void onClick(DialogInterface dialog, int which) {
 
                 amount.setText(options[which]);
+                Amount = String.valueOf(options[which]);
             }
         });
         AlertDialog dialog = builder.create();
@@ -217,6 +225,8 @@ public class RecycleLayoutFragment extends Fragment implements OnMapReadyCallbac
                         if (location != null) {
                             // Logic to handle location object
                             currentLocation = location;
+                            String address1 = getAddressFromLocation(location,getContext());
+                            address.setText(address1);
                             LatLng userLocation = new LatLng(location.getLatitude(), location.getLongitude());
                             mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(userLocation, 15));
                         }

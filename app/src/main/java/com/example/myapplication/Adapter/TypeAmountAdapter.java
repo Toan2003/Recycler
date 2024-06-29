@@ -1,6 +1,8 @@
 package com.example.myapplication.Adapter;
 
 import android.content.Context;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,6 +15,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.myapplication.Model.TypeAmount;
 import com.example.myapplication.R;
+import com.example.myapplication.Service.TotalLiveData;
+import com.example.myapplication.UI.ClientOrderFragment2;
 
 import java.util.List;
 
@@ -28,6 +32,9 @@ public class TypeAmountAdapter extends  RecyclerView.Adapter<TypeAmountAdapter.T
         this.context = context;
     }
 
+    public List<TypeAmount> getTypeAmountList() {
+        return typeAmountList;
+    }
     @NonNull
     @Override
     public TypeAmountViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -46,22 +53,28 @@ public class TypeAmountAdapter extends  RecyclerView.Adapter<TypeAmountAdapter.T
         holder.type.setText(typeAmount.getType());
 //        holder.amount.setText(String.valueOf(typeAmount.getAmount()));
         holder.amount.setHint(typeAmount.getHintString());
-//        holder.type.addTextChangedListener(new TextWatcher() {
-//            @Override
-//            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-//
-//            }
-//
-//            @Override
-//            public void onTextChanged(CharSequence s, int start, int before, int count) {
-//
-//            }
-//
-//            @Override
-//            public void afterTextChanged(Editable s) {
-//
-//            }
-//        });
+        holder.amount.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                typeAmount.setIsHave(true);
+                try {
+                    typeAmount.setAmount(Double.valueOf(s.toString()));
+                } catch (Exception e){
+                    typeAmount.setAmount(0.0);
+                }
+                TotalLiveData.getInstance().setList(typeAmountList);
+                TotalLiveData.getInstance().getIsEdit().setValue(Boolean.TRUE);
+            }
+        });
     }
 
     @Override

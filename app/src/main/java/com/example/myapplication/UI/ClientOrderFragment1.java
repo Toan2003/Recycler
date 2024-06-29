@@ -72,6 +72,7 @@ public class ClientOrderFragment1 extends Fragment implements OnMapReadyCallback
         ((TextView) recyclelayout.findViewById(R.id.customerName)).setText(customer.getCustomerName());
         ((TextView) recyclelayout.findViewById(R.id.orderID)).setText(order.getOrderID());
         ((TextView) recyclelayout.findViewById(R.id.pickupTime)).setText(new Date(order.getPickupTime()).toString());
+        ((TextView) recyclelayout.findViewById(R.id.amountView)).setText(order.getAmount());
         Location orderLocation = new Location("");
         orderLocation.setLatitude(order.getLat());
         orderLocation.setLongitude(order.getLon());

@@ -25,12 +25,20 @@ public class TypeAmount {
     private String type;
     private Double Amount;
     private String hintString;
-
+    private boolean isHave = false;
     public String getHintString() {
         return hintString;
+    }
+
+    public void setIsHave(boolean isHave) {
+        this.isHave = isHave;
+    }
+    public boolean getIsHave() {
+        return isHave;
     }
 
     public void setHintString(String hintString) {
         this.hintString = hintString;
     }
+
 }

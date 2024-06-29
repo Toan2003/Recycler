@@ -46,6 +46,7 @@ public class MainActivity extends AppCompatActivity {
     OrderFragment orderFragment;
     // SERVICE
     Order order;
+    Customer customer;
     private Messenger mMessenger;
     private boolean isServiceConnection = false;
     private CustomerServiceStatus customerServiceStatus;
@@ -211,5 +212,11 @@ public class MainActivity extends AppCompatActivity {
         ft.commit();
     }
 
+    public void setCustomer(Customer customer) {
+        this.customer = customer;
+    }
+    public Customer getCustomer() {
+        return this.customer;
+    }
 
 }

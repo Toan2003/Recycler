@@ -1,5 +1,7 @@
 package com.example.myapplication.UI;
 
+import static com.example.myapplication.Ultils.Ultils.getAddressFromLocation;
+
 import android.Manifest;
 import android.app.Activity;
 import android.app.Dialog;
@@ -14,6 +16,9 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MutableLiveData;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -24,12 +29,17 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.TextView;
 
 import com.example.myapplication.Adapter.TypeAmountAdapter;
+import com.example.myapplication.Model.Customer;
+import com.example.myapplication.Model.Order;
 import com.example.myapplication.Model.OrderPrice;
 import com.example.myapplication.Model.TypeAmount;
 import com.example.myapplication.R;
+import com.example.myapplication.Service.CustomerServiceStatus;
 import com.example.myapplication.Service.DriverServiceStatus;
+import com.example.myapplication.Service.TotalLiveData;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -40,6 +50,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.tasks.OnSuccessListener;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class ClientOrderFragment2 extends Fragment implements OnMapReadyCallback {
@@ -70,6 +81,16 @@ public class ClientOrderFragment2 extends Fragment implements OnMapReadyCallback
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         ConstraintLayout recyclelayout = (ConstraintLayout) inflater.inflate(R.layout.client_order_layout_2, null);
+        Customer customer = DriverServiceStatus.getInstance().getCustomer();
+        Order order = DriverServiceStatus.getInstance().getOrder();
+        ((TextView) recyclelayout.findViewById(R.id.customerName)).setText(customer.getCustomerName());
+        Date date = new Date(order.getPickupTime());
+        ((TextView) recyclelayout.findViewById(R.id.pickupTimeCO2)).setText(String.valueOf(date));
+        Location location = new Location("");
+        location.setLatitude(order.getLat());
+        location.setLongitude(order.getLon());
+        ((TextView) recyclelayout.findViewById(R.id.addressView)).setText(getAddressFromLocation(location,main));
+        ((TextView) recyclelayout.findViewById(R.id.amountView)).setText(order.getAmount());
 
         SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager()
                 .findFragmentById(R.id.map);
@@ -86,18 +107,20 @@ public class ClientOrderFragment2 extends Fragment implements OnMapReadyCallback
             @Override
             public void onClick(View v) {
                 final Dialog dialog = new Dialog(getContext());
+                RecyclerView recyclerView;
+                TypeAmountAdapter typeAmountAdapter;
                 dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
                 try {
                     // recycle view trong dialog
                     dialog.setContentView(R.layout.layout_dialog_completeoder);
-                    RecyclerView recyclerView = dialog.findViewById(R.id.recycleViewPopup);
+                    recyclerView = dialog.findViewById(R.id.recycleViewPopup);
 
                     //set layout manager
                     LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext(), RecyclerView.HORIZONTAL,false);
                     recyclerView.setLayoutManager(linearLayoutManager);
 
                     //set adapter
-                    TypeAmountAdapter typeAmountAdapter = new TypeAmountAdapter(getContext());
+                    typeAmountAdapter = new TypeAmountAdapter(getContext());
                     list = getTypeAmountList();
                     typeAmountAdapter.setTypeAmountList(list);
                     recyclerView.setAdapter(typeAmountAdapter);
@@ -118,14 +141,31 @@ public class ClientOrderFragment2 extends Fragment implements OnMapReadyCallback
 
                 dialog.setCancelable(true);
                 Button dialogBtn = dialog.findViewById(R.id.dialogBtn);
+                TotalLiveData.getInstance().getIsEdit().observe(main, status ->{
+                    if(status){
+                        List<TypeAmount> typeAmountList = TotalLiveData.getInstance().getList();
+                        Double totalMoney = countPrice(typeAmountList);
+                        ((TextView)dialog.findViewById(R.id.totalView)).setText(String.valueOf("Total: "+ totalMoney));
+                    } else {
+                        dialogBtn.setText("Complete");
+                    }
+                });
                 dialogBtn.setOnClickListener(new View.OnClickListener() {
                      @Override
                      public void onClick(View v) {
-                        OrderPrice orderPrice = new OrderPrice(29000.0,true,true,3.5,1.0);
+                         RecyclerView recyclerView = dialog.findViewById(R.id.recycleViewPopup);
+                         TypeAmountAdapter typeAmountAdapter = (TypeAmountAdapter) recyclerView.getAdapter();
+                         List<TypeAmount> typeAmountList = typeAmountAdapter.getTypeAmountList();
+                        OrderPrice orderPrice = countOrderPrice(typeAmountList);
                          DriverServiceStatus driverServiceStatus = DriverServiceStatus.getInstance();
                          driverServiceStatus.setOrderPrice(orderPrice);
                         main.senCompleteMessage();
                         dialog.dismiss();
+                         FragmentTransaction ft = getFragmentManager().beginTransaction();
+                         DriverFragment driverFragment = DriverFragment.newInstance("driver_fragment");
+                         ft.replace(R.id.main, driverFragment);
+                         ft.addToBackStack(null);
+                         ft.commit();
                      }
                 });
                 dialog.show();
@@ -178,9 +218,48 @@ public class ClientOrderFragment2 extends Fragment implements OnMapReadyCallback
     }
     private List<TypeAmount> getTypeAmountList(){
         List<TypeAmount> typeAmountList = new ArrayList<>();
-        typeAmountList.add(new TypeAmount("Plastic", 3.5, "Example: 3kg"));
-        typeAmountList.add(new TypeAmount("Paper", 1.5, "Example: 2kg"));
+        typeAmountList.add(new TypeAmount("Plastic", 0.0, "Example: 3kg"));
+        typeAmountList.add(new TypeAmount("Paper", 0.0, "Example: 2kg"));
         return typeAmountList;
     };
+
+    private OrderPrice countOrderPrice(List<TypeAmount> typeAmountList){
+        Double totalMoney =0.0;
+        int paper = 5000;
+        int plastic = 12000;
+        boolean isPlastic = false;
+        boolean isPaper = false;
+        Double weightPapper =0.0;
+        Double weightPlastic =0.0;
+        for (int i = 0; i < typeAmountList.size(); i++) {
+            if(typeAmountList.get(i).getType().equals("Paper")){
+                isPaper = true;
+                weightPapper += typeAmountList.get(i).getAmount();
+                totalMoney += paper * typeAmountList.get(i).getAmount();
+            } else if (typeAmountList.get(i).getType().equals("Plastic")){
+                isPlastic = true;
+                weightPlastic += typeAmountList.get(i).getAmount();
+                totalMoney += plastic * typeAmountList.get(i).getAmount();
+            }
+        }
+        return new OrderPrice(totalMoney,isPaper,isPlastic,weightPapper,weightPlastic);
+    }
+
+    private Double countPrice(List<TypeAmount> typeAmountList){
+        Double totalMoney =0.0;
+        int paper = 5000;
+        int plastic = 12000;
+
+        for (int i = 0; i < typeAmountList.size(); i++) {
+            if(typeAmountList.get(i).getType().equals("Paper")){
+
+                totalMoney += paper * typeAmountList.get(i).getAmount();
+            } else if (typeAmountList.get(i).getType().equals("Plastic")){
+
+                totalMoney += plastic * typeAmountList.get(i).getAmount();
+            }
+        }
+        return totalMoney;
+    }
 
 }
